@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
@@ -12,12 +14,16 @@ export default function Home() {
           Coordinate trips, plans, and meaningful time together without the group chat chaos.
         </p>
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:opacity-90">
+        <Link
+          href="/create"
+          className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:opacity-90">
             Start planning
-          </button>
-          <button className="rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10">
+        </Link>
+          <Link
+            href="/how-it-works"
+            className="rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10">
             See how it works
-          </button>
+          </Link>
         </div>
       </section>
     </main>
