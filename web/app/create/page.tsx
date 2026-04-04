@@ -1,7 +1,15 @@
+import Link from "next/link";
+
 export default function CreatePage() {
     return (
       <main className="min-h-screen bg-black px-6 py-16 text-white">
         <div className="mx-auto max-w-2xl">
+          <Link
+            href="/"
+            className="mb-8 inline-flex items-center text-sm text-white/60 transition hover:text-white"
+          >
+            &larr; Back to home
+          </Link>
           <p className="mb-4 text-sm uppercase tracking-[0.2em] text-white/60">
             Create a plan
           </p>
