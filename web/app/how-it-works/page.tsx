@@ -188,10 +188,10 @@ export default function HowItWorksPage() {
             How it works
           </p>
           <h1 className="text-[44px] sm:text-[56px] font-semibold tracking-[-0.02em] leading-[1.05] mb-6">
-            Less chaos.<br />More showing up.
+            Don&apos;t get lost<br />in the sauce.
           </h1>
           <p className="text-[17px] text-white/40 leading-relaxed">
-            Four steps from "we should do this" to everyone actually doing it.
+            Make it easy for your friends to just show up.
           </p>
         </div>
 
