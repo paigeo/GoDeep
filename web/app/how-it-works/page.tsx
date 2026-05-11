@@ -46,6 +46,67 @@ const STEPS = [
   },
   {
     number: "02",
+    title: "Check friends' availability",
+    description:
+      "Pick your crew manually or describe what you're looking for — \"people who'd be down for a long hike\" — and smart matching surfaces the right friends from your lists. Invites go out in priority tiers: first-choice group first, backfilling automatically if someone can't make it. Tag friends however you want, as many times as you want: hiking, college, SF, NY, etc.",
+    preview: (
+      <div className="border border-white/[0.08] rounded-xl bg-white/[0.015] overflow-hidden">
+        <div className="px-5 py-4 border-b border-white/[0.06]">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="font-mono text-[10px] tracking-[0.2em] text-white/25 uppercase mb-1">
+                Yosemite Weekend
+              </p>
+              <p className="text-[13px] text-white/50">6 spots · 4 filled</p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-16 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="w-2/3 h-full bg-white/30 rounded-full" />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] rounded-lg px-4 py-2.5 mb-4">
+            <span className="font-mono text-[10px] text-white/20">✦</span>
+            <span className="font-mono text-[11px] text-white/40 italic">&quot;friends who&apos;d be down for a long hike&quot;</span>
+          </div>
+          <p className="font-mono text-[10px] text-white/20 uppercase tracking-widest mb-3">Matched tiers</p>
+          <div className="space-y-2">
+            {[
+              { tier: "Tier 1", tag: "Hiking crew", names: ["Jess", "Marco", "Ava"], status: "3 confirmed" },
+              { tier: "Tier 2", tag: "College friends", names: ["Dylan", "Sam"], status: "1 confirmed · 1 pending" },
+              { tier: "Tier 3", tag: "SF locals", names: ["Kai", "Noor", "Lena"], status: "waiting" },
+            ].map((t, i) => (
+              <div key={i} className="bg-white/[0.04] border border-white/[0.07] rounded-lg px-4 py-2.5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] text-white/25 uppercase tracking-widest">{t.tier}</span>
+                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/35">{t.tag}</span>
+                  </div>
+                  <span className={`font-mono text-[10px] ${i === 2 ? "text-white/15" : "text-white/35"}`}>{t.status}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {t.names.map((n, j) => (
+                    <div
+                      key={j}
+                      className={`w-6 h-6 rounded-full flex items-center justify-center font-mono text-[9px] ${
+                        i === 2
+                          ? "bg-white/[0.03] border border-white/[0.05] text-white/15"
+                          : "bg-white/[0.06] border border-white/[0.1] text-white/40"
+                      }`}
+                    >
+                      {n[0]}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    number: "03",
     title: "Build the itinerary",
     description:
       "Add events for each day — hikes, meals, travel legs, anything. Switch between list view and a calendar whenever you want.",
@@ -83,7 +144,7 @@ const STEPS = [
     ),
   },
   {
-    number: "03",
+    number: "04",
     title: "Share the link",
     description:
       "One URL for everyone. No accounts, no app to install. Anyone with the link can see the plan — and eventually contribute to it.",
@@ -121,7 +182,7 @@ const STEPS = [
     ),
   },
   {
-    number: "04",
+    number: "05",
     title: "Show up",
     description:
       "Everyone's on the same page. No more 'wait, what time was that?' or 'who's driving?' The plan is the plan.",
@@ -191,7 +252,7 @@ export default function HowItWorksPage() {
             Less chaos.<br />More showing up.
           </h1>
           <p className="text-[17px] text-white/40 leading-relaxed">
-            Four steps from "we should do this" to everyone actually doing it.
+            Five steps from "we should do this" to everyone actually doing it.
           </p>
         </div>
 
