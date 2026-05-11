@@ -131,7 +131,7 @@ export default function CreatePage() {
                   We&apos;re still in beta
                 </h2>
                 <p className="text-[14px] text-white/40 mb-6">
-                  Drop your email to get on the list. We&apos;ll let you know as soon as you can start planning.
+                  Drop your email to get on the list. You&apos;ll be the first to know when we launch.
                 </p>
                 <form onSubmit={handleWaitlistSubmit} className="space-y-3">
                   <input
