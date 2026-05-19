@@ -17,12 +17,20 @@ export default function Home() {
         <span className="font-mono text-[11px] tracking-[0.25em] text-white/35 uppercase">
           GoDeep
         </span>
-        <Link
-          href="/create"
-          className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
-        >
-          Start planning →
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/portfolio"
+            className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
+          >
+            Examples
+          </Link>
+          <Link
+            href="/create"
+            className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
+          >
+            Start planning →
+          </Link>
+        </div>
       </nav>
 
       <section className="flex min-h-screen items-center px-6 sm:px-8 pt-20 pb-16 max-w-7xl mx-auto">
