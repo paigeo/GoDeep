@@ -235,12 +235,20 @@ export default function HowItWorksPage() {
         >
           GoDeep
         </Link>
-        <Link
-          href="/create"
-          className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
-        >
-          Start planning →
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/portfolio"
+            className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
+          >
+            Examples
+          </Link>
+          <Link
+            href="/create"
+            className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"
+          >
+            Start planning →
+          </Link>
+        </div>
       </nav>
 
       <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-32 pb-24">
@@ -280,7 +288,9 @@ export default function HowItWorksPage() {
         <div className="mt-28 border-t border-white/[0.06] pt-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight mb-2">Ready to go deeper?</h2>
-            <p className="text-[15px] text-white/40">Create your first plan in under a minute.</p>
+            <p className="text-[15px] text-white/40">
+              Browse <Link href="/portfolio" className="text-white/70 underline-offset-4 hover:underline">example trips</Link> for inspiration, or create your first plan in under a minute.
+            </p>
           </div>
           <Link
             href="/create"

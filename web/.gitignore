@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# portfolio source files (personal planning docs with private contact info)
+/portfolio/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
