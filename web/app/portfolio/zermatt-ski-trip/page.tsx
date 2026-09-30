@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import styles from "./page.module.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+const inter = localFont({
+  src: [{ path: "../../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata = {

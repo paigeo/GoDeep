@@ -1,24 +1,23 @@
 import Link from "next/link";
-import { Bodoni_Moda, Tenor_Sans, Jost } from "next/font/google";
+import localFont from "next/font/local";
 import styles from "./page.module.css";
 
-const bodoni = Bodoni_Moda({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  style: ["normal", "italic"],
+const bodoni = localFont({
+  src: [{ path: "../../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-normal.woff2", weight: "100 900", style: "normal" }, { path: "../../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-wght-italic.woff2", weight: "100 900", style: "italic" }],
   variable: "--font-bodoni",
+  display: "swap",
 });
 
-const tenor = Tenor_Sans({
-  subsets: ["latin"],
-  weight: ["400"],
+const tenor = localFont({
+  src: [{ path: "../../../node_modules/@fontsource/tenor-sans/files/tenor-sans-latin-400-normal.woff2", weight: "400", style: "normal" }],
   variable: "--font-tenor",
+  display: "swap",
 });
 
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["200", "300", "400"],
+const jost = localFont({
+  src: [{ path: "../../../node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
   variable: "--font-jost",
+  display: "swap",
 });
 
 export const metadata = {
