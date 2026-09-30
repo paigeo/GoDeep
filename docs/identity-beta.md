@@ -29,7 +29,7 @@ GitHub main at 63e3b99 is a Next.js 16 / React 19 / TypeScript / Tailwind 4 trip
 
 ## Build compatibility
 
-Next.js was updated to 16.3.7 to resolve dependency advisories. Its Turbopack production build failed resolving the existing Jost Google font. The build script uses the supported Webpack mode, which builds all routes successfully while preserving the existing fonts.
+Next.js was updated to 16.3.7 to resolve dependency advisories. Both bundlers encountered Google font loader failures locally or on Vercel. The existing font families are now bundled using Fontsource packages and `next/font/local`, preserving their CSS variables and avoiding build-time remote font requests. The normal Turbopack build is retained.
 
 ## Validation
 
