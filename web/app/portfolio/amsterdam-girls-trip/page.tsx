@@ -1,18 +1,17 @@
 import Link from "next/link";
-import { Fraunces, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import styles from "./page.module.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+const fraunces = localFont({
+  src: [{ path: "../../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2", weight: "100 900", style: "normal" }, { path: "../../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2", weight: "100 900", style: "italic" }],
   variable: "--font-serif",
+  display: "swap",
 });
 
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+const dmSans = localFont({
+  src: [{ path: "../../../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata = {

@@ -18,6 +18,7 @@ export default function Home() {
           GoDeep
         </span>
         <div className="flex items-center gap-6">
+          <Link href="/decisions" className="text-[13px] text-white/60 hover:text-white">Decisions beta</Link>
           <Link
             href="/portfolio"
             className="text-[13px] text-white/45 hover:text-white/80 transition-colors duration-150"

@@ -260,7 +260,7 @@ export default function HowItWorksPage() {
             Less chaos.<br />More showing up.
           </h1>
           <p className="text-[17px] text-white/40 leading-relaxed">
-            Five steps from "we should do this" to everyone actually doing it.
+            Five steps from &quot;we should do this&quot; to everyone actually doing it.
           </p>
         </div>
 
