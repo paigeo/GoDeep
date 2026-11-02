@@ -2,35 +2,46 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { getSupabase } from "@/lib/supabase/client";
+import { mapsSearchUrl, validateTripDates } from "@/lib/plans";
 
 export default function CreatePage() {
   const router = useRouter();
+  const [db] = useState(getSupabase);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [showWaitlist, setShowWaitlist] = useState(false);
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const pending = useRef(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setShowWaitlist(true);
-  }
-
-  async function handleWaitlistSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    if (pending.current) return;
+    setError("");
+    if (!name.trim()) { setError("Give your plan a name."); return; }
+    const form = new FormData(e.currentTarget);
+    const tripStart = String(form.get("start_date") || "");
+    const tripEnd = String(form.get("end_date") || "");
+    const dateError = validateTripDates(tripStart, tripEnd);
+    if (dateError) { setError(dateError); return; }
+    if (!db) { setError("Plan creation is temporarily unavailable. Please try again later."); return; }
+    pending.current = true;
+    setSaving(true);
     try {
-      await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const { data, error: saveError } = await db.from("plans").insert({
+        name: name.trim(), location: location.trim() || null,
+        start_date: tripStart, end_date: tripEnd,
+      }).select("id").single();
+      if (saveError) throw saveError;
+      router.push(`/plan/${data.id}`);
     } catch {
-      // still show success — we'll catch it in logs
+      pending.current = false;
+      setSaving(false);
+      setError("We couldn't save your plan. Your details are still here—please try again.");
     }
-    setSubmitted(true);
   }
 
   return (
@@ -50,117 +61,87 @@ export default function CreatePage() {
           Start something worth<br />showing up for.
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
-              Plan name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Yosemite weekend"
-              required
-              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white placeholder-white/15 outline-none focus:border-white/20 transition-colors"
-            />
-          </div>
-
-          <div>
-            <label className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
-              Location
-            </label>
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Yosemite, CA"
-              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white placeholder-white/15 outline-none focus:border-white/20 transition-colors"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-5" aria-busy={saving}>
+          <fieldset disabled={saving} className="space-y-5">
             <div>
-              <label className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
-                Start date
+              <label htmlFor="plan-name" className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
+                Plan name
               </label>
               <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white outline-none focus:border-white/20 transition-colors [color-scheme:dark]"
+                id="plan-name"
+                type="text"
+                maxLength={200}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Yosemite weekend"
+                required
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white placeholder-white/15 outline-none focus:border-white/20 transition-colors"
               />
             </div>
+
             <div>
-              <label className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
-                End date
+              <label htmlFor="plan-location" className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
+                Location
               </label>
               <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white outline-none focus:border-white/20 transition-colors [color-scheme:dark]"
+                id="plan-location"
+                type="text"
+                maxLength={300}
+                aria-describedby="location-help"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="City, park, or venue"
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white placeholder-white/15 outline-none focus:border-white/20 transition-colors"
               />
+              <p id="location-help" className="mt-2 text-xs text-white/45">Add a destination or address. You can check it on Google Maps.</p>
+              {location.trim() && <a href={mapsSearchUrl(location)} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex text-xs text-white/65 underline underline-offset-4 hover:text-white">View in Google Maps ↗</a>}
             </div>
-          </div>
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="w-full bg-white text-black text-[14px] font-medium rounded-lg py-3 hover:bg-white/90 transition-colors"
-            >
-              Create plan
-            </button>
-          </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="plan-start" className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
+                  Start date
+                </label>
+                <input
+                  id="plan-start"
+                  name="start_date"
+                  type="date"
+                  required min="2000-01-01" max="2100-12-31"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white outline-none focus:border-white/20 transition-colors [color-scheme:dark]"
+                />
+              </div>
+              <div>
+                <label htmlFor="plan-end" className="block font-mono text-[10px] tracking-[0.2em] text-white/30 uppercase mb-2">
+                  End date
+                </label>
+                <input
+                  id="plan-end"
+                  name="end_date"
+                  type="date"
+                  required min={startDate || "2000-01-01"} max="2100-12-31"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white outline-none focus:border-white/20 transition-colors [color-scheme:dark]"
+                />
+              </div>
+            </div>
+
+            <p className="text-xs leading-relaxed text-white/45">This creates a public trip page. Anyone with the link can view the name, destination, and dates. Keep private addresses and sensitive details out of your plan.</p>
+            {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
+            <div className="pt-2">
+              <button
+                type="submit"
+                className="w-full bg-white text-black text-[14px] font-medium rounded-lg py-3 hover:bg-white/90 transition-colors"
+              >
+                {saving ? "Saving your plan…" : "Create plan"}
+              </button>
+            </div>
+          </fieldset>
         </form>
       </div>
 
-      {showWaitlist && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-6">
-          <div className="w-full max-w-sm border border-white/[0.08] rounded-xl bg-[#09090b] p-6">
-            {submitted ? (
-              <div className="text-center py-4">
-                <p className="text-[15px] font-medium text-white mb-2">You&apos;re on the list.</p>
-                <p className="text-[13px] text-white/40">We&apos;ll reach out when it&apos;s your turn.</p>
-              </div>
-            ) : (
-              <>
-                <p className="font-mono text-[10px] tracking-[0.25em] text-white/25 uppercase mb-3">
-                  Early access
-                </p>
-                <h2 className="text-[20px] font-semibold tracking-tight mb-2">
-                  We&apos;re still in beta
-                </h2>
-                <p className="text-[14px] text-white/40 mb-6">
-                  Drop your email to get on the list. We&apos;ll let you know as soon as you can start planning.
-                </p>
-                <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@email.com"
-                    required
-                    autoFocus
-                    className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-[14px] text-white placeholder-white/15 outline-none focus:border-white/20 transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-white text-black text-[14px] font-medium rounded-lg py-3 hover:bg-white/90 transition-colors"
-                  >
-                    Join the waitlist
-                  </button>
-                </form>
-              </>
-            )}
-            <button
-              onClick={() => { setShowWaitlist(false); setSubmitted(false); }}
-              className="mt-4 w-full text-center text-[12px] text-white/25 hover:text-white/50 transition-colors"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
